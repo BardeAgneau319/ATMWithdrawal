@@ -23,12 +23,18 @@ namespace ATMWithdrawal
     public partial class AmountSelectionView : Window
     {
 
-        WithdrawalControler controler;
+        public WithdrawalControler controler;
 
         public ICommand AmountSelectionCommand { get; private set; }
 
         public AmountSelectionView()
         {
+            InitializeComponent();
+        }
+
+        public AmountSelectionView(WithdrawalControler controler)
+        {
+            this.controler = controler;
             InitializeComponent();
         }
 
@@ -52,17 +58,18 @@ namespace ATMWithdrawal
             {
                 amount = 100;
             }
-            else if (e200Button.Equals(sender))
+            else
             {
                 amount = 200;
             }
 
-            
+            this.controler.Withdraw(amount);
         }
 
         private void Other_Amount_Click(object sender, RoutedEventArgs e)
         {
-            new OtherAmountView(this.controler).Show();
+            OtherAmountView wnd = new OtherAmountView(controler);
+            wnd.Show();
             this.Close();
         }
     }

@@ -20,8 +20,13 @@ namespace ATMWithdrawal.View
     /// </summary>
     public partial class OtherAmountView : Window
     {
-        WithdrawalControler controler;
-        
+        public WithdrawalControler controler;
+
+        public OtherAmountView()
+        {
+            InitializeComponent();
+        }
+
         public OtherAmountView(WithdrawalControler controler)
         {
             this.controler = controler;
@@ -30,13 +35,16 @@ namespace ATMWithdrawal.View
 
         private void Cancel_click(object sender, RoutedEventArgs e)
         {
-            new AmountSelectionView();
+            new AmountSelectionView(this.controler);
             this.Close();
         }
 
         private void Ok_click(object sender, RoutedEventArgs e)
         {
-            
+            if(this.AmountTB.Text != "")
+            {
+                this.controler.Withdraw(Int32.Parse(this.AmountTB.Text));
+            }
         }
 
 
