@@ -21,7 +21,6 @@ namespace ATMWithdrawal.Controler
         public WithdrawalControler()
         {
             model = new WtihdrawalModel(DEFAULT_ACCOUNTID, DEFAULT_ATMID, DEFAULT_CARDNUMBER);
-            model.ResetDB(15000, 10);
         }
 
 

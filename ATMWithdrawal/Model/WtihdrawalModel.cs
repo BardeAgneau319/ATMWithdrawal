@@ -32,9 +32,11 @@ namespace ATMWithdrawal.Model
         public WtihdrawalModel(int AccountID, int ATMID, string CardId)
         {
             connection = new OracleConnection(CONNECTIONSTRING);
-            //this.AccountId = AccountId;
             this.ATMId = ATMID;
             this.CardNumber = CardId;
+
+            this.ResetDB(15000, 10);
+            this.UpdateModelNotesNumber();
 
             try
             {
@@ -150,6 +152,7 @@ namespace ATMWithdrawal.Model
                 cmd.Parameters.Add(":amout", OracleDbType.Double).Value = amount;
                 cmd.ExecuteNonQuery();
 
+                transaction.Commit();
                 UpdateModelNotesNumber();
             }
             catch (OracleException e)
