@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ATMWithdrawal.Controler;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -13,5 +14,15 @@ namespace ATMWithdrawal
     /// </summary>
     public partial class App : Application
     {
+
+        private void Application_Startup(object sender, StartupEventArgs e)
+        {
+
+            WithdrawalControler controler = new WithdrawalControler();
+            // Create the startup window
+            AmountSelectionView wnd = new AmountSelectionView(controler);
+            // Show the window
+            wnd.Show();
+        }
     }
 }
