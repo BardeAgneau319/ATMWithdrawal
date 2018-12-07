@@ -25,8 +25,6 @@ namespace ATMWithdrawal
 
         public WithdrawalControler controler;
 
-        public ICommand AmountSelectionCommand { get; private set; }
-
         public AmountSelectionView()
         {
             InitializeComponent();

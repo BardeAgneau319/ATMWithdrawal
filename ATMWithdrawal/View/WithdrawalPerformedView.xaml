@@ -1,0 +1,26 @@
+﻿<Window x:Class="ATMWithdrawal.View.WithdrawalPerformedView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ATMWithdrawal.View"
+        mc:Ignorable="d"
+        Title="WithdrawalPerformedView" Height="450" Width="800">
+    <Grid>
+        <Label x:Name="E5NotesLabel" Content="€5 notes:" HorizontalAlignment="Left" Margin="95,79,0,0" VerticalAlignment="Top" FontSize="22"/>
+        <TextBlock x:Name="E5NotesTb" HorizontalAlignment="Left" Margin="95,118,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" FontSize="18"/>
+        <Label x:Name="E10NotesLabel" Content="€10 notes:" HorizontalAlignment="Left" Margin="95,182,0,0" VerticalAlignment="Top" FontSize="22"/>
+        <TextBlock x:Name="E10NotesTb" HorizontalAlignment="Left" Margin="95,221,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" FontSize="18"/>
+        <Label x:Name="E20NotesLabel" Content="€20 notes:" HorizontalAlignment="Left" Margin="95,282,0,0" VerticalAlignment="Top" FontSize="22"/>
+        <TextBlock x:Name="E20NotesTb" HorizontalAlignment="Left" Margin="95,321,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" FontSize="18"/>
+        <Label x:Name="E100NotesLabel" Content="€100 notes:" HorizontalAlignment="Left" Margin="581,84,0,0" VerticalAlignment="Top" FontSize="22"/>
+        <TextBlock x:Name="E100NotesTb" HorizontalAlignment="Left" Margin="581,123,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" FontSize="18"/>
+        <Label x:Name="E200NotesLabel" Content="€200 notes:" HorizontalAlignment="Left" Margin="581,187,0,0" VerticalAlignment="Top" FontSize="22"/>
+        <TextBlock x:Name="E200NotesTb" HorizontalAlignment="Left" Margin="581,226,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" FontSize="18"/>
+        <Label x:Name="E500NotesLabel" Content="€500 notes:" HorizontalAlignment="Left" Margin="581,287,0,0" VerticalAlignment="Top" FontSize="22"/>
+        <TextBlock x:Name="E500NotesTb" HorizontalAlignment="Left" Margin="581,326,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" FontSize="18"/>
+        <Label x:Name="E50NotesLabel" Content="€50 notes:" HorizontalAlignment="Left" Margin="341,182,0,0" VerticalAlignment="Top" FontSize="22"/>
+        <TextBlock x:Name="E50NotesTb" HorizontalAlignment="Left" Margin="341,221,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" FontSize="18"/>
+
+    </Grid>
+</Window>
