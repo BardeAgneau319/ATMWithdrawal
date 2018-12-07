@@ -43,6 +43,8 @@ namespace ATMWithdrawal.View
         {
             if(this.AmountTB.Text != "")
             {
+                new AmountSelectionView().Show();
+                this.Close();
                 this.controler.Withdraw(Int32.Parse(this.AmountTB.Text));
             }
         }

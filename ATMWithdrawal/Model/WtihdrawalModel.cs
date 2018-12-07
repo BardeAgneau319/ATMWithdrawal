@@ -29,30 +29,30 @@ namespace ATMWithdrawal.Model
         private const string PASSWORD = "m5qrgpsd";
         private const string CONNECTIONSTRING = "Data Source=" + HOST + "; User Id=" + USERID + "; Password=" + PASSWORD + ";";
 
-        public WtihdrawalModel(int AccountID, int ATMID, string CardId)
+        public WtihdrawalModel(int ATMID, string CardId)
         {
             connection = new OracleConnection(CONNECTIONSTRING);
             this.ATMId = ATMID;
             this.CardNumber = CardId;
 
-            this.ResetDB(15000, 10);
-            this.UpdateModelNotesNumber();
-
             try
             {
                 this.connection.Open();
+
+                this.SetModelNbNotes();
+
                 string query = "SELECT ACCOUNTID FROM CARD WHERE CARDNUMBER=:cardnumber";
                 OracleCommand cmd = new OracleCommand(query, connection);
                 cmd.Parameters.Add(":cardnumber", OracleDbType.Varchar2).Value = this.CardNumber;
                 OracleDataReader reader = cmd.ExecuteReader();
                 if (reader.Read())
                 {
-                    this.AccountId = reader.GetInt32(0); ;
+                    this.AccountId = reader.GetInt32(0);
+                    this.ResetDB(100);
                 }
                 else
                 {
                     MessageBox.Show("Error while getting account id");
-                    this.ATMId = ATMID;
                 }
                 reader.Close();
             }
@@ -65,15 +65,14 @@ namespace ATMWithdrawal.Model
                 connection.Close();
             }
 
-
         }
 
-        public void ResetDB(float accountBalance, int nbNotes)
+        // Reset the account balance and delete all the transactions performed with a card
+        public void ResetDB(float accountBalance)
         {
-            // Reset the account balance and delete all the transactions performed with a card
             try
             {
-                this.connection.Open();
+                // Don't open the connection because it supposed to be already opened when the method is called
 
                 // Reset the balance
                 string query = "UPDATE ACCOUNT " +
@@ -91,23 +90,10 @@ namespace ATMWithdrawal.Model
                 cmd = new OracleCommand(query, connection);
                 cmd.Parameters.Add(":cardnumber", OracleDbType.Varchar2).Value = this.CardNumber;
                 cmd.ExecuteNonQuery();
-
-                // Set number of notes
-                query =        "UPDATE ATM " +
-                               "SET E5NOTES=:nbNotes, E10NOTES=:nbNotes, E20NOTES=:nbNotes, E50NOTES=:nbNotes, E100NOTES=:nbNotes, E200NOTES=:nbNotes, E500NOTES=:nbNotes " +
-                               "WHERE ATMID=:atmid";
-                cmd = new OracleCommand(query, connection);
-                cmd.Parameters.Add(":nbNotes", OracleDbType.Int32).Value = nbNotes;
-                cmd.Parameters.Add(":atmid", OracleDbType.Int32).Value = this.ATMId;
-                UpdateModelNotesNumber();
             }
             catch (OracleException e)
             {
                 MessageBox.Show(e.Message);
-            }
-            finally
-            {
-                connection.Close();
             }
         }
 
@@ -132,9 +118,9 @@ namespace ATMWithdrawal.Model
                 OracleCommand cmd = connection.CreateCommand();
                 cmd.Transaction = transaction;
 
-                cmd.CommandText = "UPDATE ATM" +
+                cmd.CommandText = "UPDATE ATM " +
                                   "SET E5NOTES=E5NOTES-:e5notes, E10NOTES=E10NOTES-:e10notes, E20NOTES=E20NOTES-:e20notes, E50NOTES=E50NOTES-:e50notes, " + 
-                                      "E100NOTES=E100NOTES-:e100notes, E200NOTES=E200NOTES-:e200notes, E500NOTES=E500NOTES-:e500notes" +
+                                      "E100NOTES=E100NOTES-:e100notes, E200NOTES=E200NOTES-:e200notes, E500NOTES=E500NOTES-:e500notes " +
                                   "WHERE ATMID=:atmid";
                 cmd.Parameters.Add(":e5notes", OracleDbType.Int32).Value = usedE5Notes;
                 cmd.Parameters.Add(":e10notes", OracleDbType.Int32).Value = usedE10Notes;
@@ -148,12 +134,14 @@ namespace ATMWithdrawal.Model
 
                 // Create a new banque transaction in the DB (a trigger automaticly set the new account balance)
                 cmd.Parameters.Clear();
-                cmd.CommandText = "INSERT INTO TRANSACTION(TRANSACTIONID, TRANSACTIONTYPE, AMOUNT) VALUES (TRANSACTIONID_seq.next, 'W', :amout)";
-                cmd.Parameters.Add(":amout", OracleDbType.Double).Value = amount;
+                cmd.CommandText = "INSERT INTO TRANSACTION(TRANSACTIONID, TYPE, AMOUNT, CARDNUMBER, ATMID) VALUES (TRANSACTION_SEQ.nextval, 'W', :amout, :cardnumber, :atmid)";
+                cmd.Parameters.Add(":amout", OracleDbType.Int32).Value = amount;
+                cmd.Parameters.Add(":cardnumber", OracleDbType.Varchar2).Value = this.CardNumber;
+                cmd.Parameters.Add(":amout", OracleDbType.Int32).Value = this.ATMId;
                 cmd.ExecuteNonQuery();
 
                 transaction.Commit();
-                UpdateModelNotesNumber();
+                this.SetModelNbNotes();
             }
             catch (OracleException e)
             {
@@ -169,7 +157,7 @@ namespace ATMWithdrawal.Model
             return true;
         }
 
-        private void UpdateModelNotesNumber()
+        private void SetModelNbNotes()
         {
 
             try
